@@ -28,3 +28,14 @@ tool, but running `ykman oath accounts list` and `ykman oath accounts code
 <Account:user>` just for getting TOTP secrets feels long and convoluted. And
 even then you have to select the TOPT code and copy it manually... like an
 animal! `yubikey-otp` has a nicer UX imho. Try it out! ;)
+
+### Known issues
+
+#### Conflict with yubikey-agent
+
+[`yubikey-agent` takes a persistent transaction so the YubiKey will cache the PIN after first use](https://github.com/FiloSottile/yubikey-agent#conflicts-with-gpg-agent-and-yubikey-manager).
+In that case, kill `yubikey-agent` and try again.
+
+    killall -HUP yubikey-agent
+
+Don't worry, `yubikey-agent` will restart the next time you want to use it.
