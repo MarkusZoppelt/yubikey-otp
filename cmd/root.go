@@ -76,4 +76,12 @@ func init() {
 		fmt.Println("ykman not found. Please install ykman.")
 		os.Exit(1)
 	}
+
+	// check if awk is installed
+	// TODO: remove awk dependency
+	_, err = exec.LookPath("awk")
+	if err != nil {
+		fmt.Println("awk not found. Please install awk.")
+		os.Exit(1)
+	}
 }
