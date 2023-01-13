@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/pkg/errors"
@@ -48,11 +49,20 @@ searchable list. Select the code you want to copy to the clipboard.`,
 			os.Exit(1)
 		}
 
-		// build command to copy to clipboard
-		cmdStr := fmt.Sprintf("ykman oath accounts code %s | awk 'NF>1{print $NF}' | pbcopy", accounts[idx])
+		var cmdStr string
 
-		// fmt.Println("Running command: ", cmdStr)
-		fmt.Printf("Please touch your YubiKey to generate the OTP code for %s\n", accounts[idx])
+		if runtime.GOOS == "darwin" {
+			// if we are on macOS, we use pbcopy to copy the OTP code to the clipboard
+			cmdStr = fmt.Sprintf("ykman oath accounts code %s | awk 'NF>1{print $NF}' | pbcopy", accounts[idx])
+		} else if runtime.GOOS == "linux" {
+			// if running on linux, use xclip instead of pbcopy
+			cmdStr = fmt.Sprintf("ykman oath accounts code %s | awk 'NF>1{print $NF}' | xclip -selection clipboard", accounts[idx])
+		} else {
+			fmt.Println("Unsupported OS")
+			os.Exit(1)
+		}
+
+		fmt.Printf("Using your YubiKey to generate the OTP code for %s...\n", accounts[idx])
 		err = exec.Command("sh", "-c", cmdStr).Run()
 		if err != nil {
 			fmt.Println("Error copying to clipboard: ", errors.WithStack(err))
