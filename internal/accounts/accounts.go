@@ -2,13 +2,15 @@ package accounts
 
 import (
 	"bufio"
+	"fmt"
 	"os/exec"
 	"strings"
 )
 
-func GetOTPAccountsFromYubiKey() (accounts []string, err error) {
-	out, err := exec.Command("ykman", "oath", "accounts", "list").Output()
+func GetOTPAccountsFromYubiKey(device string) (accounts []string, err error) {
+	out, err := exec.Command("ykman", "--device", device, "oath", "accounts", "list").Output()
 	if err != nil {
+		fmt.Println("Cmd that failed: ", "ykman", "--device", device, "oath", "accounts", "list")
 		return nil, err
 	}
 
