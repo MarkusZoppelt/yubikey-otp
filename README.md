@@ -19,7 +19,10 @@ selecting.
       yubikey-otp [flags]
 
     Flags:
-      -h, --help   help for yubikey-otp
+      -h, --help        help for yubikey-otp
+      --device string   YubiKey device ID
+      --verbose         Enable verbose logging
+
 
 ### Motivation:
 
