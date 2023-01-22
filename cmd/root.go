@@ -76,7 +76,7 @@ searchable list. Select the code you want to copy to the clipboard.`,
 			os.Exit(1)
 		}
 
-		cmdStr := fmt.Sprintf("ykman --device %s oath accounts code %s", deviceID, accounts[idx])
+		cmdStr := fmt.Sprintf("ykman --device %s oath accounts code '%s'", deviceID, accounts[idx])
 
 		if viper.GetBool("verbose") {
 			fmt.Println(cmdStr)
