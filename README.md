@@ -37,8 +37,7 @@ animal! `yubikey-otp` has a nicer UX imho. Try it out! ;)
 #### Conflict with yubikey-agent
 
 [`yubikey-agent` takes a persistent transaction so the YubiKey will cache the PIN after first use](https://github.com/FiloSottile/yubikey-agent#conflicts-with-gpg-agent-and-yubikey-manager).
-In that case, kill `yubikey-agent` and try again.
-
-    killall -HUP yubikey-agent
+To mitigate that issue, `yubikey-otp` will run `killall -HUP yubikey-agent`
+during init.
 
 Don't worry, `yubikey-agent` will restart the next time you want to use it.

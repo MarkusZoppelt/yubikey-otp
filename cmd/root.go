@@ -53,15 +53,6 @@ searchable list. Select the code you want to copy to the clipboard.`,
 		accounts, err := accounts.GetOTPAccountsFromYubiKey(deviceID)
 		if err != nil {
 			fmt.Println("Please make sure that the YubiKey is connected and that ykman is installed.")
-
-			// if the user has yubikey-agent installed, the error might be related to that
-			// so we check if yubikey-agent is installed and if so, we print a hint
-			_, err = exec.LookPath("yubikey-agent")
-			if err == nil {
-				fmt.Println()
-				fmt.Println("If you are using yubikey-agent, you may try to kill it with")
-				fmt.Println("`killall -HUP yubikey-agent` and try again.")
-			}
 			os.Exit(1)
 		}
 
@@ -115,6 +106,16 @@ func init() {
 	if err != nil {
 		fmt.Println("ykman not found. Please install ykman.")
 		os.Exit(1)
+	}
+
+	// if yubikey-agent is installed. we might need to kill it
+	// otherwise the ykman command will fail
+	_, err = exec.LookPath("yubikey-agent")
+	if err == nil {
+		err = exec.Command("killall", "-HUP", "yubikey-agent").Run()
+		if err != nil {
+			fmt.Println("Error killing yubikey-agent:", err)
+		}
 	}
 
 	flag.String("device", "", "YubiKey device ID")
