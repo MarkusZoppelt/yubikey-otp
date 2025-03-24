@@ -1,6 +1,6 @@
 module github.com/MarkusZoppelt/yubikey-otp
 
-go 1.19
+go 1.24
 
 require (
 	github.com/atotto/clipboard v0.1.4
