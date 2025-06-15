@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 
+	"cunicu.li/go-iso7816/drivers/pcsc"
+	"cunicu.li/go-ykoath/v2"
 	"github.com/atotto/clipboard"
+	"github.com/ebfe/scard"
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
@@ -47,12 +49,9 @@ searchable list. Select the code you want to copy to the clipboard.`,
 			}
 		}
 
-		// get serial number of YubiKey (last word of device string)
-		deviceID := device[strings.LastIndex(device, " ")+1:]
-
-		accounts, err := accounts.GetOTPAccountsFromYubiKey(deviceID)
+		accounts, err := accounts.GetOTPAccountsFromYubiKey(device)
 		if err != nil {
-			fmt.Println("Please make sure that the YubiKey is connected and that ykman is installed.")
+			fmt.Println("Please make sure that the YubiKey is connected.")
 			os.Exit(1)
 		}
 
@@ -67,25 +66,15 @@ searchable list. Select the code you want to copy to the clipboard.`,
 			os.Exit(1)
 		}
 
-		cmdStr := fmt.Sprintf("ykman --device %s oath accounts code '%s'", deviceID, accounts[idx])
-
-		if viper.GetBool("verbose") {
-			fmt.Println(cmdStr)
-		}
-
 		fmt.Printf("Using your YubiKey to generate the OTP code for %s...\n", accounts[idx])
-		out, err := exec.Command("sh", "-c", cmdStr).Output()
+		otpCode, err := generateOTPCode(device, accounts[idx])
 		if err != nil {
-			fmt.Println("Error executing command:", string(out))
-			fmt.Println(err)
+			fmt.Println("Error generating OTP code:", err)
 			os.Exit(1)
 		}
 
-		// get the OTP code from the output
-		otpCode := out[strings.LastIndex(string(out), " ")+1:]
-
 		// copy the OTP code to the clipboard
-		err = clipboard.WriteAll(string(otpCode))
+		err = clipboard.WriteAll(otpCode)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -101,16 +90,42 @@ func Execute() {
 	}
 }
 
-func init() {
-	_, err := exec.LookPath("ykman")
+func generateOTPCode(device, account string) (string, error) {
+	ctx, err := scard.EstablishContext()
 	if err != nil {
-		fmt.Println("ykman not found. Please install ykman.")
-		os.Exit(1)
+		return "", err
+	}
+	defer ctx.Release()
+
+	card, err := pcsc.NewCard(ctx, device, true)
+	if err != nil {
+		return "", err
+	}
+	defer card.Close()
+
+	ykoathCard, err := ykoath.NewCard(card)
+	if err != nil {
+		return "", err
+	}
+	defer ykoathCard.Close()
+
+	_, err = ykoathCard.Select()
+	if err != nil {
+		return "", err
 	}
 
+	code, err := ykoathCard.Calculate(account)
+	if err != nil {
+		return "", err
+	}
+
+	return code, nil
+}
+
+func init() {
 	// if yubikey-agent is installed. we might need to kill it
-	// otherwise the ykman command will fail
-	_, err = exec.LookPath("yubikey-agent")
+	// otherwise the YubiKey connection might fail
+	_, err := exec.LookPath("yubikey-agent")
 	if err == nil {
 		err = exec.Command("killall", "-HUP", "yubikey-agent").Run()
 		if err != nil {

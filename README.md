@@ -26,11 +26,10 @@ selecting.
 
 ### Motivation:
 
-[`ykman`](https://github.com/Yubico/yubikey-manager) is a powerful and useful
-tool, but running `ykman oath accounts list` and `ykman oath accounts code
-<Account:user>` just for getting TOTP secrets feels long and convoluted. And
-even then you have to select the TOTP code and copy it manually... like an
-animal! `yubikey-otp` has a nicer UX imho. Try it out! ;)
+This tool provides a streamlined way to access TOTP secrets from your YubiKey
+without external dependencies. It uses a pure-Go implementation to communicate
+directly with your YubiKey via PCSC, offering fuzzy search and automatic
+clipboard copying for a better user experience.
 
 ### Known issues
 
