@@ -51,6 +51,10 @@ better user experience.
 
 ### Known issues
 
+#### OATH Password Authentication
+
+Currently not supported due to go-ykoath library limitations. Remove password with `ykman oath access change --remove` or use ykman directly.
+
 #### Conflict with yubikey-agent
 
 [`yubikey-agent` takes a persistent transaction so the YubiKey will cache the PIN after first use](https://github.com/FiloSottile/yubikey-agent#conflicts-with-gpg-agent-and-yubikey-manager).
