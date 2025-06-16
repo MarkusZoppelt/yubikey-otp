@@ -6,6 +6,24 @@ selecting.
 
 ### Installation:
 
+#### Prerequisites
+
+**Linux:**
+```bash
+# Ubuntu/Debian
+sudo apt-get install libpcsclite-dev wl-clipboard # or xclip for x11
+
+# Arch Linux
+sudo pacman -S pcsclite wl-clipboard # or xclip for x11
+```
+
+**macOS:**
+
+PC/SC framework is built-in, clipboard support is built-in, so no additional
+dependencies required
+
+#### Install the tool:
+
     go install github.com/MarkusZoppelt/yubikey-otp@latest
 
 ### Usage
@@ -27,9 +45,9 @@ selecting.
 ### Motivation:
 
 This tool provides a streamlined way to access TOTP secrets from your YubiKey
-without external dependencies. It uses a pure-Go implementation to communicate
-directly with your YubiKey via PCSC, offering fuzzy search and automatic
-clipboard copying for a better user experience.
+with minimal system dependencies. It uses Go to communicate directly with your 
+YubiKey via PC/SC, offering fuzzy search and automatic clipboard copying for a 
+better user experience.
 
 ### Known issues
 
