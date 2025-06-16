@@ -8,7 +8,7 @@ import (
 
 	"cunicu.li/go-iso7816/drivers/pcsc"
 	"cunicu.li/go-ykoath/v2"
-	"github.com/atotto/clipboard"
+	"github.com/MarkusZoppelt/yubikey-otp/internal/clipboard"
 	"github.com/ebfe/scard"
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/pterm/pterm"
