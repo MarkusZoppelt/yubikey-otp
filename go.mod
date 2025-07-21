@@ -9,7 +9,7 @@ require (
 	github.com/ktr0731/go-fuzzyfinder v0.9.0
 	github.com/pterm/pterm v0.12.81
 	github.com/spf13/cobra v1.9.1
-	github.com/spf13/pflag v1.0.6
+	github.com/spf13/pflag v1.0.7
 	github.com/spf13/viper v1.20.1
 	golang.org/x/crypto v0.40.0
 	golang.org/x/term v0.33.0
