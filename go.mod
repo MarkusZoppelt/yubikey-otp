@@ -3,7 +3,7 @@ module github.com/MarkusZoppelt/yubikey-otp
 go 1.24
 
 require (
-	cunicu.li/go-iso7816 v0.8.6
+	cunicu.li/go-iso7816 v0.8.7
 	cunicu.li/go-ykoath/v2 v2.1.25
 	github.com/ebfe/scard v0.0.0-20241214075232-7af069cabc25
 	github.com/ktr0731/go-fuzzyfinder v0.9.0
